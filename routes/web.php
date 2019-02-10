@@ -37,3 +37,31 @@ Route::group(['prefix' => 'cars'], function (){
     Route::post('/save','CarController@save')->name('car_save');
     Route::get('/detail/{id?}','CarController@detail')->middleware('verify_permissions')->name('car_detail');
 });
+
+Route::group(['prefix' => 'parameters'], function (){
+    Route::get('/','ParameterController@index')->middleware('verify_permissions')->name('parameters');
+    Route::get('/get_types','ParameterController@load')->name('get_parameters');
+    Route::post('/save','ParameterController@save')->name('parameter_save');
+    Route::get('/detail/{id?}','ParameterController@detail')->middleware('verify_permissions')->name('parameter_detail');
+});
+
+Route::group(['prefix' => 'failure_codes'], function (){
+    Route::get('/','FailureCodeController@index')->middleware('verify_permissions')->name('failure_codes');
+    Route::get('/get_types','FailureCodeController@load')->name('get_failure_codes');
+    Route::post('/save','FailureCodeController@save')->name('failure_code_save');
+    Route::get('/detail/{id?}','FailureCodeController@detail')->middleware('verify_permissions')->name('failure_code_detail');
+});
+
+Route::group(['prefix' => 'systems'], function (){
+    Route::get('/','SystemController@index')->middleware('verify_permissions')->name('systems');
+    Route::get('/get_types','SystemController@load')->name('get_systems');
+    Route::post('/save','SystemController@save')->name('system_save');
+    Route::get('/detail/{id?}','SystemController@detail')->middleware('verify_permissions')->name('system_detail');
+});
+
+Route::group(['prefix' => 'cases'], function (){
+    Route::get('/','CaseController@index')->middleware('verify_permissions')->name('cases');
+    Route::get('/get_types','CaseController@load')->name('get_cases');
+    Route::post('/save','CaseController@save')->name('case_svae');
+    Route::get('/detail/{id?}','CaseController@detail')->middleware('verify_permissions')->name('case_detail');
+});
