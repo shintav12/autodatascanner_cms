@@ -62,6 +62,7 @@ Route::group(['prefix' => 'systems'], function (){
 Route::group(['prefix' => 'cases'], function (){
     Route::get('/','CaseController@index')->middleware('verify_permissions')->name('cases');
     Route::get('/get_types','CaseController@load')->name('get_cases');
-    Route::post('/save','CaseController@save')->name('case_svae');
+    Route::post('/save','CaseController@save')->name('case_save');
+    Route::post('change_status','CaseController@change_status')->name('change_status_case');
     Route::get('/detail/{id?}','CaseController@detail')->middleware('verify_permissions')->name('case_detail');
 });
