@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cases;
+use App\Models\CasesFailureCodes;
+use App\Models\CasesParameters;
+use App\Models\CasesSystems;
+use App\Models\FailureCodes;
 use App\Models\Parameters;
 use App\Models\Systems;
 use Illuminate\Http\Request;
@@ -27,12 +31,12 @@ class CaseController extends BaseController
 
     public function change_status(){
         try{
+            Cases::update(['status',0]);
             $id = Input::get('id');
             $status = intval(Input::get('status'));
             $case = Cases::find($id);
             $case->status = $status;
             $case->save();
-
             return response(json_encode(array("error" => 0)), 200);
         }catch(Exception $exception){
             return response(json_encode(array("error" => 1)), 200);
@@ -57,10 +61,22 @@ class CaseController extends BaseController
         );
         $template["systems"] = Systems::get(["id","name"]);
         $template["parameters"] = Parameters::get(["id","name"]);
-        $template["failer_codes"] = Parameters::get(["id","name"]);
+        $template["codes"] = FailureCodes::get(["id","name","description"]);
         if($id != 0){
             $case = Cases::find($id);
             $template['item'] = $case;
+            $template["cases_systems"] = DB::select(DB::raw("select s.id, s.name 
+                                                                     from cases_systems cs
+                                                                     join system s on s.id = cs.system_id
+                                                                     where cs.case_id =".$id));
+            $template["cases_codes"] = DB::select(DB::raw("select fc.id, fc.name, fc.description
+                                                                     from cases_failurescodes cf
+                                                                     join failure_codes fc on fc.id = cf.failure_codes_id
+                                                                     where cf.case_id =".$id));
+            $template["cases_parameters"] = DB::select(DB::raw("select p.id, p.name, cp.value 
+                                                                     from cases_parameters cp
+                                                                     join parameters p on p.id = cp.parameter_id
+                                                                     where cp.case_id =".$id));
         }
 
         return view('case.detail',$template);
@@ -70,21 +86,48 @@ class CaseController extends BaseController
         try{
             $id = Input::get('id');
             $name = Input::get('name');
-
+            $codes = Input::get('codes');
+            $parameters = Input::get('parameters');
+            $values = Input::get('values');
+            $systems = Input::get('systems');
 
             if($id != 0) {
-                $brand = Brand::find($id);
-                $brand->updated_at = date('Y-m-d H:i:s');
+                $case = Cases::find($id);
             }
             else{
-                $brand  = new Brand();
-                $brand->status = 1;
-                $brand->created_at = date('Y-m-d H:i:s');
+                $case  = new Cases();
+                $case->status = 0;
             }
-            $brand->name = $name;
-            $brand->save();
 
-            return response(json_encode(array("error" => 0,"id" => $brand->id)), 200);
+            $case->name = $name;
+            $case->save();
+
+            CasesFailureCodes::where("case_id",$case->id)->delete();
+            foreach($codes as $code){
+                $caseFailureCode = new CasesFailureCodes();
+                $caseFailureCode->case_id = $case->id;
+                $caseFailureCode->failure_codes_id = $code;
+                $caseFailureCode->save();
+            }
+
+            CasesParameters::where("case_id",$case->id)->delete();
+            for($i = 0 ; $i < count($parameters); $i++){
+                $caseParameter = new CasesParameters();
+                $caseParameter->case_id = $case->id;
+                $caseParameter->parameter_id = $parameters[$i];
+                $caseParameter->value = $values[$i];
+                $caseParameter->save();
+            }
+
+            CasesSystems::where("case_id",$case->id)->delete();
+            foreach($systems as $system){
+                $caseSystem = new CasesSystems();
+                $caseSystem->case_id = $case->id;
+                $caseSystem->system_id = $system;
+                $caseSystem->save();
+            }
+
+            return response(json_encode(array("error" => 0,"id" => $case->id)), 200);
 
         }catch(Exception $exception){
             return response(json_encode(array("error" => 1)), 200);

@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class CasesParameters extends Model
 {
     protected $table = "cases_parameters";
+    public $timestamps = false;
 }

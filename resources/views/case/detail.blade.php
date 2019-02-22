@@ -15,6 +15,8 @@
     <script src="{{asset("assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js")}}" type="text/javascript"></script>
     <script class="text/javascript">
         var selectedSystems = [];
+        var selectedParameters = [];
+        var selectedCodes = [];
         $(document).ready(function(){
             $("#form-user").validate({
                 errorPlacement: function errorPlacement(error, element) {
@@ -84,6 +86,7 @@
                                 '<div class="col-xs-3">'+
                                     '<div class="col-xs-3">'+
                                         '<label class="systems" data-id="'+ selectedSystemVal +'" data-name="' + selectedSystemText + '" name="systems[]">' + selectedSystemText +  '</label>'+
+                                        '<input hidden value="' + selectedSystemVal + '" name="systems[]">'+
                                     '</div>'+
                                     '<div class="col-xs-1">'+
                                         '<button id="deleteSystem" type="button" class="btn btn-primary deleteSystem"><i class="fa fa-trash"></i></button>'+
@@ -93,6 +96,59 @@
             selectedSystems.push({ id: selectedSystemVal, text: selectedSystemText });
             $("#systemsContainer").append(html);
             console.log(selectedSystems);
+        });
+
+        $(document).on('click','.deleteParameter', function(e){
+            var deletedParameter = $(this).parent().parent().find("label");
+            var aux = selectedParameters.find(x => x.id == deletedParameter.data("id"));
+            selectedParameters.splice(aux, 1);
+            $(this).parent().parent().parent().remove();
+        });
+        $(document).on('click','#addParameter', function(e){
+            var selectedParameterText = $('#parametersSelect').find(":selected").text();
+            var selectedParameterVal = $('#parametersSelect').val();
+            var html= '<div class="col-xs-12" style="margin-left: 0px; margin-top: 15px ">' +
+                '<div class="col-xs-12">'+
+                '<div class="col-xs-4">'+
+                '<label class="parameters" data-id="'+ selectedParameterVal +'" data-name="' + selectedParameterText + '" name="parameters[]">' + selectedParameterText +  '</label>'+
+                '<input hidden value="' + selectedParameterVal + '" name="parameters[]">'+
+                '</div>'+
+                '<div class="col-xs-3">'+
+                '<input class="values form-control" name="values[]">'+
+                '</div>'+
+                '<div class="col-xs-1">'+
+                '<button id="deleteParameter" type="button" class="btn btn-primary deleteParameter"><i class="fa fa-trash"></i></button>'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+            selectedParameters.push({ id: selectedParameterVal, text: selectedParameterText });
+            $("#parametersContainer").append(html);
+            console.log(selectedParameters);
+        });
+
+        $(document).on('click','.deleteCode', function(e){
+            var deletedCode = $(this).parent().parent().find("label");
+            var aux = selectedParameters.find(x => x.id == deletedCode.data("id"));
+            selectedCodes.splice(aux, 1);
+            $(this).parent().parent().parent().remove();
+        });
+        $(document).on('click','#addCode', function(e){
+            var selectedCodeText = $('#codesSelect').find(":selected").text();
+            var selectedCodeVal = $('#codesSelect').val();
+            var html= '<div class="col-xs-12" style="margin-left: 0px; margin-top: 15px ">' +
+                '<div class="col-xs-12">'+
+                '<div class="col-xs-4">'+
+                '<label class="codes" data-id="'+ selectedCodeVal +'" data-name="' + selectedCodeText + '" name="codes[]">' + selectedCodeText +  '</label>'+
+                '</div>'+
+                '<input hidden value="' + selectedCodeVal + '" name="codes[]">'+
+                '<div class="col-xs-1">'+
+                '<button id="deleteCode" type="button" class="btn btn-primary deleteCode"><i class="fa fa-trash"></i></button>'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+            selectedCodes.push({ id: selectedCodeVal, text: selectedCodeText });
+            $("#codesContainer").append(html);
+            console.log(selectedCodes);
         });
 
     </script>
@@ -119,7 +175,7 @@
                                 <a id="tab_3" href="#tab_1_3" data-toggle="tab"> Parametros </a>
                             </li>
                             <li id="tab_li_4" class="tab-trigger">
-                                <a id="tab_4" href="#tab_1_3" data-toggle="tab"> Codigos de Falla </a>
+                                <a id="tab_4" href="#tab_1_4" data-toggle="tab"> Codigos de Falla </a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -145,7 +201,6 @@
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <div class="col-xs-11">
-                                                    <label>Sistema</label>
                                                     <select id="systemSelect" class="form-control select2">
                                                         <?php foreach ($systems as $system){?>
                                                             <option value="{{$system->id}}">{{$system->name}}</option>
@@ -157,6 +212,21 @@
                                                 </div>
                                             </div>
                                             <div id="systemsContainer">
+                                                <?php if(isset($item)){?>
+                                                    @foreach($cases_systems as $cs)
+                                                        <div class="col-xs-12" style="margin-left: 0px; margin-top: 15px ">
+                                                            <div class="col-xs-3">
+                                                                <div class="col-xs-3">
+                                                                    <label class="systems" data-id="{{$cs->id}}" data-name="{{$cs->name}}" name="systems[]">{{$cs->name}}</label>
+                                                                    <input hidden value="{{$cs->id}}" name="systems[]">
+                                                                </div>
+                                                                <div class="col-xs-1">
+                                                                    <button id="deleteSystem" type="button" class="btn btn-primary deleteSystem"><i class="fa fa-trash"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    @endforeach
+                                                <?php }?>
                                             </div>
                                         </div>
                                     </div>
@@ -168,7 +238,7 @@
                                         <div class="form-group">
                                             <div class="col-xs-12">
                                                 <div class="col-xs-11">
-                                                    <select id="systemSelect" class="form-control select2">
+                                                    <select id="parametersSelect" class="form-control select2">
                                                         <?php foreach ($parameters as $parameter){?>
                                                         <option value="{{$parameter->id}}">{{$parameter->name}}</option>
                                                         <?php }?>
@@ -178,7 +248,62 @@
                                                     <a id="addParameter" class="btn btn-primary">A&nacute;adir</a>
                                                 </div>
                                             </div>
-                                            <div id="parameterContainer">
+                                            <div id="parametersContainer">
+                                                <?php if(isset($item)){?>
+                                                @foreach($cases_parameters as $cp)
+                                                    <div class="col-xs-12" style="margin-left: 0px; margin-top: 15px ">
+                                                        <div class="col-xs-12">
+                                                            <div class="col-xs-4">
+                                                                <label class="parameters" data-id="{{$cp->id}}" data-name="{{$cp->name}}" name="parameters[]">{{$cp->name}}</label>
+                                                                <input hidden value="{{$cp->id}}" name="parameters[]">
+                                                            </div>
+                                                            <div class="col-xs-3">
+                                                                <input class="values form-control" value="{{$cp->value}}" name="values[]">
+                                                            </div>
+                                                            <div class="col-xs-1">
+                                                                <button id="deleteParameter" type="button" class="btn btn-primary deleteParameter"><i class="fa fa-trash"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                                <?php }?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab_1_4">
+                                <div class="row form-body">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <div class="col-xs-12">
+                                                <div class="col-xs-11">
+                                                    <select id="codesSelect" class="form-control select2">
+                                                        <?php foreach ($codes as $code){?>
+                                                        <option value="{{$code->id}}">{{$code->name}}-{{$code->description}}</option>
+                                                        <?php }?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-xs-1">
+                                                    <a id="addCode" class="btn btn-primary">A&nacute;adir</a>
+                                                </div>
+                                            </div>
+                                            <div id="codesContainer">
+                                                <?php if(isset($item)){?>
+                                                    @foreach($cases_codes as $cc)
+                                                        <div class="col-xs-12" style="margin-left: 0px; margin-top: 15px ">
+                                                            <div class="col-xs-12">
+                                                                <div class="col-xs-4">
+                                                                    <label class="codes" data-id="{{$cc->id}}" data-name="{{$cc->name}}-{{$cc->description}}" name="codes[]">{{$cc->name}}-{{$cc->description}}</label>
+                                                                </div>
+                                                                <input hidden value="{{$cc->id}}" name="codes[]">
+                                                                <div class="col-xs-1">
+                                                                    <button id="deleteCode" type="button" class="btn btn-primary deleteCode"><i class="fa fa-trash"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                <?php }?>
                                             </div>
                                         </div>
                                     </div>
