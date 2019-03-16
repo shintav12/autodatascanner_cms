@@ -73,12 +73,11 @@ class CaseController extends BaseController
                                                                      from cases_failurescodes cf
                                                                      join failure_codes fc on fc.id = cf.failure_codes_id
                                                                      where cf.case_id =".$id));
-            $template["cases_parameters"] = DB::select(DB::raw("select p.id, p.name, cp.value 
+            $template["cases_parameters"] = DB::select(DB::raw("select p.id, p.name, cp.* 
                                                                      from cases_parameters cp
                                                                      join parameters p on p.id = cp.parameter_id
                                                                      where cp.case_id =".$id));
         }
-
         return view('case.detail',$template);
     }
 
@@ -89,6 +88,9 @@ class CaseController extends BaseController
             $codes = Input::get('codes');
             $parameters = Input::get('parameters');
             $values = Input::get('values');
+            $ranges = Input::get('ranges');
+            $second_values = Input::get('second_values');
+            $second_ranges = Input::get('second_ranges');
             $systems = Input::get('systems');
 
             if($id != 0) {
@@ -116,6 +118,9 @@ class CaseController extends BaseController
                 $caseParameter->case_id = $case->id;
                 $caseParameter->parameter_id = $parameters[$i];
                 $caseParameter->value = $values[$i];
+                $caseParameter->range = $ranges[$i];
+                $caseParameter->second_range = $second_ranges[$i];
+                $caseParameter->second_value = $second_values[$i];
                 $caseParameter->save();
             }
 

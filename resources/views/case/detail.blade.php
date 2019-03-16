@@ -109,12 +109,21 @@
             var selectedParameterVal = $('#parametersSelect').val();
             var html= '<div class="col-xs-12" style="margin-left: 0px; margin-top: 15px ">' +
                 '<div class="col-xs-12">'+
-                '<div class="col-xs-4">'+
+                '<div class="col-xs-3">'+
                 '<label class="parameters" data-id="'+ selectedParameterVal +'" data-name="' + selectedParameterText + '" name="parameters[]">' + selectedParameterText +  '</label>'+
                 '<input hidden value="' + selectedParameterVal + '" name="parameters[]">'+
                 '</div>'+
-                '<div class="col-xs-3">'+
+                '<div class="col-xs-2">'+
                 '<input class="values form-control" name="values[]">'+
+                '</div>'+
+                '<div class="col-xs-2">'+
+                '<input class="ranges form-control" name="ranges[]">'+
+                '</div>'+
+                '<div class="col-xs-2">'+
+                '<input class="second_values form-control" name="second_values[]">'+
+                '</div>'+
+                '<div class="col-xs-2">'+
+                '<input class="second_ranges form-control" name="second_ranges[]">'+
                 '</div>'+
                 '<div class="col-xs-1">'+
                 '<button id="deleteParameter" type="button" class="btn btn-primary deleteParameter"><i class="fa fa-trash"></i></button>'+
@@ -253,12 +262,21 @@
                                                 @foreach($cases_parameters as $cp)
                                                     <div class="col-xs-12" style="margin-left: 0px; margin-top: 15px ">
                                                         <div class="col-xs-12">
-                                                            <div class="col-xs-4">
-                                                                <label class="parameters" data-id="{{$cp->id}}" data-name="{{$cp->name}}" name="parameters[]">{{$cp->name}}</label>
-                                                                <input hidden value="{{$cp->id}}" name="parameters[]">
-                                                            </div>
                                                             <div class="col-xs-3">
+                                                                <label class="parameters" data-id="{{$cp->id}}" data-name="{{$cp->name}}" name="parameters[]">{{$cp->name}}</label>
+                                                                <input hidden value="{{$cp->parameter_id}}" name="parameters[]">
+                                                            </div>
+                                                            <div class="col-xs-2">
                                                                 <input class="values form-control" value="{{$cp->value}}" name="values[]">
+                                                            </div>
+                                                            <div class="col-xs-2">
+                                                                <input class="ranges form-control" value="{{$cp->range}}" name="ranges[]">
+                                                            </div>
+                                                            <div class="col-xs-2">
+                                                                <input class="second_values form-control" value="{{$cp->second_value}}" name="second_values[]">
+                                                            </div>
+                                                            <div class="col-xs-2">
+                                                                <input class="second_ranges form-control" value="{{$cp->second_range}}" name="second_ranges[]">
                                                             </div>
                                                             <div class="col-xs-1">
                                                                 <button id="deleteParameter" type="button" class="btn btn-primary deleteParameter"><i class="fa fa-trash"></i></button>
