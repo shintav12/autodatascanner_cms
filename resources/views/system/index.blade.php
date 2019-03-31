@@ -65,7 +65,7 @@
                         "aTargets": [4],
                         "mData": null,
                         "mRender": function (data, type, full) {
-                            return '<a href="{{url("system/detail")}}/' + full.id + '" class="btn btn-primary"><i class="fa fa-edit"></i>&nbsp;Editar</a>';
+                            return '<a href="{{url("systems/detail")}}/' + full.id + '" class="btn btn-primary"><i class="fa fa-edit"></i>&nbsp;Editar</a>';
                         }
 
                     }
