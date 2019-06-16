@@ -73,6 +73,25 @@
             });
         });
 
+        $('.switch').bootstrapSwitch({
+            'size': 'mini',
+            'AnotherName':'AnotherValue'
+        });
+
+        $("#input-24").fileinput({
+                allowedFileExtensions: ["jpg"],
+                uploadAsync: false,
+                showUpload: false, // hide upload button
+                showRemove: false,
+                initialPreviewAsData: true,
+                language: 'es',
+                <?php if(isset($item)){?>
+                initialPreview: [
+                   "<?php echo config('app.path_url').'/'.$item->image.'?v=' ?>",
+                ]
+                <?php }?>
+            });
+
         $(document).on('click','.deleteSystem', function(e){
             var deletedSystem = $(this).parent().parent().find("label");
             var aux = selectedSystems.find(x => x.id == deletedSystem.data("id"));
@@ -198,6 +217,26 @@
                                                 <div class="col-xs-12">
                                                     <label>Nombre</label>
                                                     <input type="text" class="form-control" name="name" value="<?php if( isset($item) )  echo $item->name;?>" placeholder="Ingrese el nombre de la marca">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <div class="col-xs-12">
+                                                <div class="col-xs-12">
+                                                    <label>Canbus case?</label><br/>
+                                                    <input type="checkbox"  name="canbus_case"  <?php if($item->canbus_case == 1) echo 'checked'; ?> class="make-switch switch" data-on-text="&nbsp;ACTIVO&nbsp;" data-off-text="&nbsp;INACTIVO&nbsp;" data-size="normal">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <div class="col-xs-12">
+                                                <div class="col-xs-12">
+                                                    <label>Diagram</label>                                                   
+                                                    <input id="input-24" class="input-fixed" name="image" type="file">
                                                 </div>
                                             </div>
                                         </div>

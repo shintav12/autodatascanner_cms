@@ -6,6 +6,7 @@ use App\Models\Cases;
 use App\Models\CasesFailureCodes;
 use App\Models\CasesParameters;
 use App\Models\CasesSystems;
+use App\Utils\imageUploader;
 use App\Models\FailureCodes;
 use App\Models\Parameters;
 use App\Models\Systems;
@@ -92,6 +93,9 @@ class CaseController extends BaseController
             $second_values = Input::get('second_values');
             $second_ranges = Input::get('second_ranges');
             $systems = Input::get('systems');
+            $image = $request->file('image');
+            
+            $canbus_case = Input::get('canbus_case');
 
             if($id != 0) {
                 $case = Cases::find($id);
@@ -99,10 +103,18 @@ class CaseController extends BaseController
             else{
                 $case  = new Cases();
                 $case->status = 0;
+                $case->image = "";
             }
 
             $case->name = $name;
+            $case->canbus_case = !is_null($canbus_case);
             $case->save();
+
+            if (!is_null($image)) {
+                $path = imageUploader::upload($case, $image, "case");
+                $case->image = $path;
+                $case->save();
+            }
 
             CasesFailureCodes::where("case_id",$case->id)->delete();
             foreach($codes as $code){
