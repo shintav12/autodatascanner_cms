@@ -226,7 +226,7 @@
                                             <div class="col-xs-12">
                                                 <div class="col-xs-12">
                                                     <label>Canbus case?</label><br/>
-                                                    <input type="checkbox"  name="canbus_case"  <?php if($item->canbus_case == 1) echo 'checked'; ?> class="make-switch switch" data-on-text="&nbsp;ACTIVO&nbsp;" data-off-text="&nbsp;INACTIVO&nbsp;" data-size="normal">
+                                                    <input type="checkbox"  name="canbus_case"  <?php  if(isset($item)) if($item->canbus_case == 1) echo 'checked'; ?> class="make-switch switch" data-on-text="&nbsp;ACTIVO&nbsp;" data-off-text="&nbsp;INACTIVO&nbsp;" data-size="normal">
                                                 </div>
                                             </div>
                                         </div>
